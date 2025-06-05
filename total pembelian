@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <string.h>
+#include <windows.h>
+#include <stdlib.h>
+#include <time.h>
+
+void totalPembelian() {
+    system("cls");
+    int total = 0;
+    int waktu;
+    time_t now = time(NULL);
+    struct tm *t = localtime(&now);
+
+    printf("==========================================================================\n");
+    printf("|                           FTI SHOPPING CENTER                          |\n");
+    printf("|                       Jl. O. Notohamidjojo No. 64                      |\n");
+    printf("|                           Salatiga, Jawa Tengah                        |\n");
+    printf("|                            %04d-%02d-%02d %02d:%02d:%02d                         |\n",
+            t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
+            t->tm_hour, t->tm_min, t->tm_sec);
+    printf("==========================================================================\n");
+    printf("| %-20s | %-12s | %-15s | %-14s |\n", "Merk", "Jumlah", "Harga Satuan", "Total Harga");
+    printf("-------------------------------------------------------------------------\n");
+
+     for (int m = 0; m < 5; m++) {
+        for (int i = 0; i < 10; i++){
+            if (jumlahBeli[m][i] > 0){
+
+            int subtotal = jumlahBeli[m][i]*hargaBaju[i];
+
+            printf("| %-20s | %-12d | Rp %-12d | Rp %-11d |\n", merk[m], jumlahBeli[m][i], hargaBaju[i], subtotal);
+            total+= subtotal;
+            }
+        }
+    }
+    printf("--------------------------------------------------------------------------\n");
+    printf("|                                                 Total | Rp %-12d|\n", total);
+    printf("==========================================================================\n\n");
+    system("pause");
+}
