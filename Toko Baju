@@ -42,14 +42,7 @@ void registrasiPengguna() {
     getchar();
     getchar();
 }
-
 void menu();
-void tampilMerk();
-void tambahStok();
-void kalkulasiHarga();
-void totalPembelian();
-void keluar();
-
 int loginPengguna() {
     printf("\033]11;#FFC2CC\007");
     printf("\033[38;2;0;0;0m");
@@ -128,6 +121,11 @@ int main() {
     } while (pilihan != 3);
 }
 
+void tampilMerk();
+void tambahStok();
+void kalkulasiHarga();
+void totalPembelian();
+void keluar();
 void menu() {
     int pilihan;
     do {
