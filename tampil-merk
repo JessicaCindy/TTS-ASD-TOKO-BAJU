@@ -106,3 +106,18 @@ void tampilMerk() {
         }
     } while (pilihan != 0);
 }
+
+void keluar() {
+    char nama[5][30] = {"Hanifa Dita Safira", "Jessica Cindy Raharjo", "Wynona Terra Winoto", "Augie Vicarpascha Millu", "Berlian Rezin Agatha"};
+    char nim[5][10] = {"672024022", "672024030", "672024104", "672024144", "672024254"};
+    system("cls");
+    printf("=====================================================\n");
+    printf("|                    Terimakasih                    |\n");
+    printf("=====================================================\n");
+    printf("| No.| Nama                           | NIM         |\n");
+    printf("-----------------------------------------------------\n");
+    for (int i = 0; i < 5; i++) {
+        printf("| %2d.| %-30s | %-11s |\n", i + 1, nama[i], nim[i]);
+    }
+    printf("=====================================================\n");
+}
