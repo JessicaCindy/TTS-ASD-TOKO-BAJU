@@ -1,0 +1,54 @@
+void tambahStok() {
+    int pilihanMerk, pilihanBaju, jumlahTambah;
+    do {
+        system("cls");
+        printf("==============================================\n");
+        printf("|          Pilih Merk untuk Tambah Stok      |\n");
+        printf("==============================================\n");
+        for (int i = 0; i < 5; i++) {
+            printf("| %2d.| %-37s |\n", i + 1, merk[i]);
+        }
+        printf("|  0.| Kembali ke menu utama                 |\n");
+        printf("==============================================\n");
+        printf("Pilihan Anda: ");
+        scanf("%d", &pilihanMerk);
+
+        if (pilihanMerk >= 1 && pilihanMerk <= 5) {
+            int indeksMerk = pilihanMerk - 1;
+            do {
+                system("cls");
+                printf("=====================================================\n");
+                printf("|          Tambah Stok untuk Merk: %-15s|\n", merk[indeksMerk]);
+                printf("=====================================================\n");
+                printf("| No.| Jenis Baju           | Stok Saat Ini |\n");
+                printf("------------------------------------------------------\n");
+                for (int i = 0; i < 10; i++) {
+                    printf("| %2d.| %-20s | %-13d |\n",
+                           i + 1, jenisBaju[i], stok[indeksMerk][i]);
+                }
+                printf("=====================================================\n");
+                printf("Masukkan nomor baju (0 untuk kembali): ");
+                scanf("%d", &pilihanBaju);
+
+                if (pilihanBaju >= 1 && pilihanBaju <= 10) {
+                    printf("Jumlah stok yang ingin ditambahkan: ");
+                    scanf("%d", &jumlahTambah);
+                    if (jumlahTambah > 0) {
+                        stok[indeksMerk][pilihanBaju - 1] += jumlahTambah;
+                        printf("Berhasil menambahkan %d stok untuk %s %s.\n",
+                               jumlahTambah, jenisBaju[pilihanBaju - 1], merk[indeksMerk]);
+                    } else {
+                        printf("Jumlah stok harus lebih dari 0.\n");
+                    }
+                    system("pause");
+                } else if (pilihanBaju != 0) {
+                    printf("Pilihan tidak valid. Silakan coba lagi.\n");
+                    system("pause");
+                }
+            } while (pilihanBaju != 0);
+        } else if (pilihanMerk != 0) {
+            printf("Pilihan tidak valid. Silakan coba lagi.\n");
+            system("pause");
+        }
+    } while (pilihanMerk != 0);
+}
