@@ -29,7 +29,7 @@ void menu() {
                 break;
             case 5:
                 keluar();
-                break;
+                system("pause");
             default:
                 printf("Pilihan tidak valid. Silakan coba lagi.\n");
                 system("pause");
