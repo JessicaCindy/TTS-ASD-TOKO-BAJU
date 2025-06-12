@@ -39,8 +39,6 @@ void registrasiPengguna() {
     sudahTerdaftar = 1;
     printf("  Akun berhasil didaftarkan. Silakan login.\n");
     printf("==============================================\n");
-    getchar();
-    getchar();
 }
 
 void menu();
@@ -56,8 +54,6 @@ int loginPengguna() {
         printf("==============================================\n");
         printf("     Anda belum memiliki akun. Silakan daftar\n");
         printf("==============================================\n");
-        getchar();
-        getchar();
         return 0;
     }
 
@@ -75,8 +71,6 @@ int loginPengguna() {
         strcmp(sandiInput, sandiTersimpan) == 0) {
         printf("  Login berhasil. Selamat datang, %s.\n", penggunaTersimpan);
         printf("==============================================\n");
-        getchar();
-        getchar();
         loadingBar();
         menu();
         return 1;
@@ -114,9 +108,8 @@ int main() {
                 loginBerhasil = loginPengguna();
                 break;
             case 3:
-                printf("  Terima kasih telah menggunakan program ini.\n");
-                printf("==============================================\n");
-                break;
+                keluar();
+                system("pause");
             default:
                 printf("  Pilihan tidak valid. Silakan pilih 1-3.\n");
         }
