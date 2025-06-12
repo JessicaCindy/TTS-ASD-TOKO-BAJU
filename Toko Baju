@@ -39,8 +39,6 @@ void registrasiPengguna() {
     sudahTerdaftar = 1;
     printf("  Akun berhasil didaftarkan. Silakan login.\n");
     printf("==============================================\n");
-    getchar();
-    getchar();
 }
 void menu();
 int loginPengguna() {
