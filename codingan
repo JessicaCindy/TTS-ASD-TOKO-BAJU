@@ -1,0 +1,549 @@
+#include <stdio.h>
+#include <string.h>
+#include <windows.h> // Digunakan untuk fungsi Sleep dan system("cls")
+#include <stdlib.h>  // Digunakan untuk system()
+#include <time.h>    // Digunakan untuk waktu transaksi
+
+// --- Variabel Global (Kapasitas dan Penghitung yang Ditingkatkan) ---
+#define MAX_MERK 20  // Jumlah maksimum merk yang bisa disimpan
+#define MAX_JENIS 30 // Jumlah maksimum jenis baju yang bisa disimpan
+
+char penggunaTersimpan[50];
+char sandiTersimpan[50];
+int sudahTerdaftar = 0;
+
+// Array untuk menyimpan data merk, jenis baju, harga, stok, dan jumlah beli
+char merk[MAX_MERK][20] = {"Colorbox", "Uniqlo", "H&M", "Zara", "Levi's"};
+char jenisBaju[MAX_JENIS][20] = { "T-Shirt", "Kemeja", "Sweater", "Hoodie", "Cardigan","Jaket", "Jeans", "Cargo", "Gaun", "Rok"};
+int hargaBaju[MAX_JENIS] = {200000, 200000, 200000, 200000, 200000, 200000, 200000, 200000, 200000, 200000};
+
+// Stok disesuaikan dengan MAX_MERK dan MAX_JENIS
+int stok[MAX_MERK][MAX_JENIS] = {
+    {5, 3, 7, 4, 6, 2, 5, 1, 3, 4},
+    {4, 2, 6, 3, 4, 2, 3, 2, 1, 5},
+    {6, 3, 5, 3, 2, 1, 4, 2, 3, 3},
+    {5, 4, 6, 2, 5, 3, 4, 1, 2, 4},
+    {3, 2, 4, 3, 4, 2, 3, 1, 3, 3}
+};
+
+int jumlahBeli[MAX_MERK][MAX_JENIS] = {0};
+
+int jumlahMerk = 5;      // Jumlah merk yang saat ini ada
+int jumlahJenisBaju = 10; // Jumlah jenis baju yang saat ini ada
+
+// --- Prototipe Fungsi ---
+void loadingBar();
+void registrasiPengguna();
+void menu();
+int loginPengguna();
+void tampilMerk();
+void beli(int namaMerk);
+void tambahStok();
+void kalkulasiHarga();
+void totalPembelian();
+void keluar();
+
+// Fungsi baru
+void tambahMerkBaru();
+void tambahJenisBajuBaru();
+void editHargaBaju();
+
+// --- Fungsi Utama dan Fungsi Dasar ---
+
+void loadingBar() {
+    printf("\033]11;#FFC2CC\007"); // Mengatur warna latar belakang terminal (khusus Windows)
+    printf("\033[38;2;0;0;0m");   // Mengatur warna teks menjadi hitam
+    char a = 177, b = 219;
+    system("cls"); // Membersihkan layar konsol
+    printf("\n\n\n\n\n\n\n\n\n");
+    printf("\t\t\t\t\t\t      mohon tunggu sebentar \n\n");
+    printf("\t\t\t\t      ");
+    for (int i = 0; i < 50; i++){
+        printf("%c", b); // Mencetak karakter blok penuh untuk bilah loading
+        Sleep(30);       // Jeda 30 milidetik
+    }
+    printf("\n");
+    system("cls");
+}
+
+void registrasiPengguna() {
+    printf("\033]11;#FFC2CC\007");
+    printf("\033[38;2;0;0;0m");
+    system("cls");
+    printf("\n");
+    printf("==============================================\n");
+    printf("           MENU REGISTRASI AKUN             \n");
+    printf("==============================================\n");
+    printf("  Masukkan username : ");
+    scanf("%s", penggunaTersimpan); // Membaca input username
+    printf("  Masukkan password : ");
+    scanf("%s", sandiTersimpan);   // Membaca input password
+    sudahTerdaftar = 1;            // Menandai bahwa akun sudah terdaftar
+    printf("  Akun berhasil didaftarkan. Silakan login.\n");
+    printf("==============================================\n");
+    getchar(); // Membersihkan buffer input
+    getchar(); // Menunggu input karakter dari pengguna
+}
+
+int loginPengguna() {
+    printf("\033]11;#FFC2CC\007");
+    printf("\033[38;2;0;0;0m");
+    char penggunaInput[50];
+    char sandiInput[50];
+
+    if (!sudahTerdaftar) { // Mengecek apakah sudah ada akun terdaftar
+        printf("\n");
+        printf("==============================================\n");
+        printf("    Anda belum memiliki akun. Silakan daftar\n");
+        printf("==============================================\n");
+        getchar();
+        getchar();
+        return 0; // Login gagal
+    }
+
+    system("cls");
+    printf("\n");
+    printf("==============================================\n");
+    printf("               MENU LOGIN                     \n");
+    printf("==============================================\n");
+    printf("  Username : ");
+    scanf("%s", penggunaInput);
+    printf("  Password : ");
+    scanf("%s", sandiInput);
+
+    // Membandingkan input dengan data tersimpan
+    if (strcmp(penggunaInput, penggunaTersimpan) == 0 &&
+        strcmp(sandiInput, sandiTersimpan) == 0) {
+        printf("  Login berhasil. Selamat datang, %s.\n", penggunaTersimpan);
+        printf("==============================================\n");
+        getchar();
+        getchar();
+        loadingBar(); // Menampilkan bilah loading
+        menu();       // Masuk ke menu utama setelah login berhasil
+        return 1;     // Login berhasil
+    } else {
+        printf("  Username atau password salah.\n");
+        printf("==============================================\n");
+        return 0; // Login gagal
+    }
+}
+
+int main() {
+    int pilihan;
+
+    do {
+        system("cls");
+        printf("\033]11;#FFC2CC\007");
+        printf("\033[38;2;0;0;0m");
+        printf("\n");
+        printf("===========================================================\n");
+        printf("          SELAMAT DATANG DI FTI SHOPPING CENTER          \n");
+        printf("===========================================================\n");
+        printf("  1. Registrasi\n");
+        printf("  2. Login\n");
+        printf("  3. Keluar\n");
+        printf("-----------------------------------------------------------\n");
+        printf("  Pilih menu  : ");
+        scanf("%d", &pilihan);
+
+        switch (pilihan) {
+            case 1:
+                registrasiPengguna();
+                break;
+            case 2:
+                loginPengguna();
+                break;
+            case 3:
+                printf("  Terima kasih telah menggunakan program ini.\n");
+                printf("==============================================\n");
+                exit(0);
+                break;
+            default:
+                printf("  Pilihan tidak valid. Silakan pilih 1-3.\n");
+                getchar(); // Membersihkan buffer
+                getchar(); // Menunggu input untuk melanjutkan
+        }
+    } while (pilihan != 3);
+    return 0;
+}
+
+// --- Fungsi Menu dan Fitur Toko ---
+
+void menu() {
+    int pilihan;
+    do {
+        system("cls");
+        printf("==============================================\n");
+        printf("|    Selamat Datang di Toko Baju FTI UKSW     |\n");
+        printf("==============================================\n");
+        printf("|  1.| Tampilkan merk baju                    |\n");
+        printf("|  2.| Tambah stok baju                       |\n");
+        printf("|  3.| Kalkulasi harga                        |\n");
+        printf("|  4.| Total harga pembelian                  |\n");
+        printf("|  5.| Tambah Merk Baru                       |\n");
+        printf("|  6.| Tambah Jenis Baju Baru                 |\n");
+        printf("|  7.| Edit Harga Baju                        |\n");
+        printf("|  0.| Keluar                                 |\n");
+        printf("==============================================\n");
+        printf("Masukkan pilihan Anda: ");
+        scanf("%d", &pilihan);
+
+        switch (pilihan) {
+            case 1:
+                tampilMerk();
+                break;
+            case 2:
+                tambahStok();
+                break;
+            case 3:
+                kalkulasiHarga();
+                break;
+            case 4:
+                totalPembelian();
+                break;
+            case 5:
+                tambahMerkBaru();
+                break;
+            case 6:
+                tambahJenisBajuBaru();
+                break;
+            case 7:
+                editHargaBaju();
+                break;
+            case 0:
+                keluar();
+                break;
+            default:
+                printf("Pilihan tidak valid. Silakan coba lagi.\n");
+                system("pause");
+                break;
+        }
+    } while (pilihan != 8);
+}
+
+void tampilMerk() {
+    int pilihan;
+    do {
+        system("cls");
+        printf("==============================================\n");
+        printf("|         Pilih Merk Baju yang Tersedia      |\n");
+        printf("==============================================\n");
+        for (int i = 0; i < jumlahMerk; i++) { // Loop hingga jumlah merk saat ini
+            printf("| %2d.| %-37s |\n", i + 1, merk[i]);
+        }
+        printf("|  0.| Kembali ke menu utama                 |\n");
+        printf("==============================================\n");
+        printf("Pilihan Anda: ");
+        scanf("%d", &pilihan);
+
+        if (pilihan >= 1 && pilihan <= jumlahMerk) { // Cek sesuai jumlah merk
+            beli(pilihan - 1);
+        } else if (pilihan != 0) {
+            printf("Pilihan tidak valid. Silakan coba lagi.\n");
+            system("pause");
+        }
+    } while (pilihan != 0);
+}
+
+void beli(int namaMerk) {
+    int pilihan, banyak;
+    do {
+        system("cls");
+        printf("=====================================================\n");
+        printf("|                   %-30s                    |\n", merk[namaMerk]);
+        printf("|      Silakan pilih pakaian yang ingin dibeli:     |\n");
+        printf("=====================================================\n");
+        printf("| No.| Jenis Baju             | Harga          | Stok  |\n");
+        printf("------------------------------------------------------\n");
+        for (int i = 0; i < jumlahJenisBaju; i++) { // Loop hingga jumlah jenis baju saat ini
+            printf("| %2d.| %-20s | Rp %-10d | %3d   |\n",
+                   i + 1, jenisBaju[i], hargaBaju[i], stok[namaMerk][i]);
+        }
+        printf("=====================================================\n");
+        printf("Masukkan nomor baju (0 untuk kembali): ");
+        scanf("%d", &pilihan);
+
+        if (pilihan >= 1 && pilihan <= jumlahJenisBaju) { // Cek sesuai jumlah jenis baju
+            printf("Jumlah yang ingin dibeli: ");
+            scanf("%d", &banyak);
+            if (banyak <= stok[namaMerk][pilihan - 1]) {
+                jumlahBeli[namaMerk][pilihan - 1] += banyak;
+                stok[namaMerk][pilihan - 1] -= banyak;
+                printf("Berhasil membeli %d %s dari %s\n",
+                       banyak, jenisBaju[pilihan - 1], merk[namaMerk]);
+            } else {
+                printf("Stok tidak mencukupi!\n");
+            }
+            system("pause");
+        } else if (pilihan != 0) {
+            printf("Pilihan tidak valid. Silakan coba lagi.\n");
+            system("pause");
+        }
+    } while (pilihan != 0);
+}
+
+void tambahStok() {
+    int pilihanMerk, pilihanBaju, jumlahTambah;
+    do {
+        system("cls");
+        printf("==============================================\n");
+        printf("|         Pilih Merk untuk Tambah Stok      |\n");
+        printf("==============================================\n");
+        for (int i = 0; i < jumlahMerk; i++) { // Loop hingga jumlah merk saat ini
+            printf("| %2d.| %-37s |\n", i + 1, merk[i]);
+        }
+        printf("|  0.| Kembali ke menu utama                 |\n");
+        printf("==============================================\n");
+        printf("Pilihan Anda: ");
+        scanf("%d", &pilihanMerk);
+
+        if (pilihanMerk >= 1 && pilihanMerk <= jumlahMerk) { // Cek sesuai jumlah merk
+            int indeksMerk = pilihanMerk - 1;
+            do {
+                system("cls");
+                printf("=====================================================\n");
+                printf("|         Tambah Stok untuk Merk: %-15s|\n", merk[indeksMerk]);
+                printf("=====================================================\n");
+                printf("| No.| Jenis Baju             | Stok Saat Ini |\n");
+                printf("------------------------------------------------------\n");
+                for (int i = 0; i < jumlahJenisBaju; i++) { // Loop hingga jumlah jenis baju saat ini
+                    printf("| %2d.| %-20s | %-13d |\n",
+                           i + 1, jenisBaju[i], stok[indeksMerk][i]);
+                }
+                printf("=====================================================\n");
+                printf("Masukkan nomor baju (0 untuk kembali): ");
+                scanf("%d", &pilihanBaju);
+
+                if (pilihanBaju >= 1 && pilihanBaju <= jumlahJenisBaju) { // Cek sesuai jumlah jenis baju
+                    printf("Jumlah stok yang ingin ditambahkan: ");
+                    scanf("%d", &jumlahTambah);
+                    if (jumlahTambah > 0) {
+                        stok[indeksMerk][pilihanBaju - 1] += jumlahTambah;
+                        printf("Berhasil menambahkan %d stok untuk %s %s.\n",
+                               jumlahTambah, jenisBaju[pilihanBaju - 1], merk[indeksMerk]);
+                    } else {
+                        printf("Jumlah stok harus lebih dari 0.\n");
+                    }
+                    system("pause");
+                } else if (pilihanBaju != 0) {
+                    printf("Pilihan tidak valid. Silakan coba lagi.\n");
+                    system("pause");
+                }
+            } while (pilihanBaju != 0);
+        } else if (pilihanMerk != 0) {
+            printf("Pilihan tidak valid. Silakan coba lagi.\n");
+            system("pause");
+        }
+    } while (pilihanMerk != 0);
+}
+
+void kalkulasiHarga(){
+    system("cls");
+    int total = 0;
+    int bayar;
+
+    printf("=========================================\n");
+    printf("|             Kalkulasi Harga           |\n");
+    printf("=========================================\n");
+    for (int m = 0; m < jumlahMerk; m++){ // Loop hingga jumlah merk
+        int cetakMerk = 0;
+        for (int i = 0; i < jumlahJenisBaju; i++){ // Loop hingga jumlah jenis baju
+            if (jumlahBeli[m][i] > 0){
+                if (!cetakMerk){
+                    printf("\nMerk: %s\n", merk[m]);
+                    cetakMerk = 1;
+                }
+                int subtotal = jumlahBeli[m][i] * hargaBaju[i];
+                printf("%s x %d = Rp %d\n", jenisBaju[i], jumlahBeli[m][i], subtotal);
+                total += subtotal;
+            }
+        }
+    }
+    if(total == 0){
+        printf("\nBelum ada pembelian yang dilakukan\n");
+        system ("pause");
+        return;
+    }
+    printf("=========================================\n");
+    printf("| Total           : Rp %d              \n", total);
+    printf("-----------------------------------------\n");
+    printf("| Uang bayar      : Rp ");
+    scanf("%d", &bayar);
+    printf("-----------------------------------------\n");
+    if (bayar >= total) {
+        printf("| Uang kembalian : Rp %d\n", bayar - total);
+        printf("=========================================\n");
+    } else {
+        printf("Uang tidak cukup! Transaksi dibatalkan.\n");
+        printf("=========================================\n");
+    }
+    system ("pause");
+}
+
+void totalPembelian() {
+    system("cls");
+    int total = 0;
+    time_t now = time(NULL);
+    struct tm *t = localtime(&now);
+
+    printf("==========================================================================\n");
+    printf("|                         FTI SHOPPING CENTER                            |\n");
+    printf("|                         Jl. O. Notohamidjojo No. 64                      |\n");
+    printf("|                           Salatiga, Jawa Tengah                          |\n");
+    printf("|                        %04d-%02d-%02d %02d:%02d:%02d                        |\n",
+             t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
+             t->tm_hour, t->tm_min, t->tm_sec);
+    printf("==========================================================================\n");
+    printf("| %-20s | %-12s | %-15s | %-14s |\n", "Jenis Baju (Merk)", "Jumlah", "Harga Satuan", "Total Harga");
+    printf("-------------------------------------------------------------------------\n");
+
+    // Perbaikan: Loop untuk menampilkan pembelian per jenis baju dan merk
+    for (int m = 0; m < jumlahMerk; m++) {
+        for (int i = 0; i < jumlahJenisBaju; i++){
+            if (jumlahBeli[m][i] > 0){
+                int subtotal = jumlahBeli[m][i] * hargaBaju[i];
+                // Menggabungkan merk dan jenis baju untuk tampilan yang lebih jelas
+                char item[50];
+                snprintf(item, sizeof(item), "%s (%s)", jenisBaju[i], merk[m]);
+                printf("| %-20s | %-12d | Rp %-12d | Rp %-11d |\n", item, jumlahBeli[m][i], hargaBaju[i], subtotal);
+                total += subtotal;
+            }
+        }
+    }
+
+    if (total == 0) {
+        printf("|                                  Belum ada pembelian yang dilakukan                                  |\n");
+    }
+    printf("--------------------------------------------------------------------------\n");
+    printf("|                                                          Total | Rp %-12d|\n", total);
+    printf("==========================================================================\n\n");
+    system("pause");
+}
+
+void keluar() {
+    char nama[5][30] = {"Hanifa Dita Safira", "Jessica Cindy Raharjo", "Wynona Terra Winoto", "Augie Vicarpascha Millu", "Berlian Rezin Agatha"};
+    char nim[5][10] = {"672024022", "672024030", "672024104", "672024144", "672024254"};
+    system("cls");
+    printf("=====================================================\n");
+    printf("|                   Terimakasih                     |\n");
+    printf("=====================================================\n");
+    printf("| No.| Nama                            | NIM        |\n");
+    printf("-----------------------------------------------------\n");
+    for (int i = 0; i < 5; i++) {
+        printf("| %2d.| %-30s | %-11s |\n", i + 1, nama[i], nim[i]);
+    }
+    printf("=====================================================\n");
+    system("pause"); // Menunggu pengguna menekan tombol sebelum program berakhir sepenuhnya
+    system("cls");
+    main();
+}
+
+// --- Fungsi Baru ---
+
+void tambahMerkBaru() {
+    system("cls");
+    printf("==============================================\n");
+    printf("|             Tambah Merk Baju Baru          |\n");
+    printf("==============================================\n");
+
+    if (jumlahMerk < MAX_MERK) {
+        printf("Masukkan nama merk baru: ");
+        scanf("%s", merk[jumlahMerk]); // Tambahkan merk ke indeks berikutnya
+        // Inisialisasi stok dan jumlahBeli untuk merk baru menjadi 0
+        for (int i = 0; i < jumlahJenisBaju; i++) {
+            stok[jumlahMerk][i] = 0;
+            jumlahBeli[jumlahMerk][i] = 0;
+        }
+        jumlahMerk++; // Tingkatkan jumlah merk yang ada
+        printf("Merk baru '%s' berhasil ditambahkan!\n", merk[jumlahMerk - 1]);
+    } else {
+        printf("Kapasitas merk sudah penuh. Tidak bisa menambah merk lagi.\n");
+    }
+    printf("==============================================\n");
+    system("pause");
+}
+
+void tambahJenisBajuBaru() {
+    system("cls");
+    printf("==============================================\n");
+    printf("|          Tambah Jenis Baju Baru            |\n");
+    printf("==============================================\n");
+
+    if (jumlahJenisBaju < MAX_JENIS) {
+        printf("Masukkan nama jenis baju baru (contoh: Jumpsuit): ");
+        scanf("%s", jenisBaju[jumlahJenisBaju]); // Tambahkan jenis baju ke indeks berikutnya
+
+        printf("Masukkan harga standar untuk %s: Rp ", jenisBaju[jumlahJenisBaju]);
+        scanf("%d", &hargaBaju[jumlahJenisBaju]); // Set harga untuk jenis baju baru
+
+        // Inisialisasi stok untuk jenis baju baru pada semua merk yang sudah ada
+        for (int m = 0; m < jumlahMerk; m++) {
+            stok[m][jumlahJenisBaju] = 0;
+            jumlahBeli[m][jumlahJenisBaju] = 0;
+        }
+        jumlahJenisBaju++; // Tingkatkan jumlah jenis baju yang ada
+        printf("Jenis baju '%s' berhasil ditambahkan dengan harga Rp %d!\n",
+               jenisBaju[jumlahJenisBaju - 1], hargaBaju[jumlahJenisBaju - 1]);
+    } else {
+        printf("Kapasitas jenis baju sudah penuh. Tidak bisa menambah jenis baju lagi.\n");
+    }
+    printf("==============================================\n");
+    system("pause");
+}
+
+void editHargaBaju() {
+    int pilihanMerk, pilihanBaju, hargaBaru;
+    do {
+        system("cls");
+        printf("==============================================\n");
+        printf("|             Edit Harga Baju                |\n");
+        printf("==============================================\n");
+        printf("|         Pilih Merk untuk Edit Harga        |\n");
+        printf("==============================================\n");
+        for (int i = 0; i < jumlahMerk; i++) {
+            printf("| %2d.| %-37s |\n", i + 1, merk[i]);
+        }
+        printf("|  0.| Kembali ke menu utama                 |\n");
+        printf("==============================================\n");
+        printf("Pilihan Anda: ");
+        scanf("%d", &pilihanMerk);
+
+        if (pilihanMerk >= 1 && pilihanMerk <= jumlahMerk) {
+            int indeksMerk = pilihanMerk - 1;
+            do {
+                system("cls");
+                printf("=====================================================\n");
+                printf("|         Edit Harga untuk Merk: %-15s|\n", merk[indeksMerk]);
+                printf("=====================================================\n");
+                printf("| No.| Jenis Baju             | Harga Saat Ini |\n");
+                printf("------------------------------------------------------\n");
+                for (int i = 0; i < jumlahJenisBaju; i++) {
+                    printf("| %2d.| %-20s | Rp %-10d |\n",
+                           i + 1, jenisBaju[i], hargaBaju[i]);
+                }
+                printf("=====================================================\n");
+                printf("Masukkan nomor baju (0 untuk kembali): ");
+                scanf("%d", &pilihanBaju);
+
+                if (pilihanBaju >= 1 && pilihanBaju <= jumlahJenisBaju) {
+                    printf("Masukkan harga baru untuk %s %s: Rp ", jenisBaju[pilihanBaju - 1], merk[indeksMerk]);
+                    scanf("%d", &hargaBaru);
+                    if (hargaBaru > 0) {
+                        hargaBaju[pilihanBaju - 1] = hargaBaru; // Perbarui harga
+                        printf("Harga %s %s berhasil diubah menjadi Rp %d.\n",
+                               jenisBaju[pilihanBaju - 1], merk[indeksMerk], hargaBaru);
+                    } else {
+                        printf("Harga harus lebih dari 0.\n");
+                    }
+                    system("pause");
+                } else if (pilihanBaju != 0) {
+                    printf("Pilihan tidak valid. Silakan coba lagi.\n");
+                    system("pause");
+                }
+            } while (pilihanBaju != 0);
+        } else if (pilihanMerk != 0) {
+            printf("Pilihan tidak valid. Silakan coba lagi.\n");
+            system("pause");
+        }
+    } while (pilihanMerk != 0);
+}
