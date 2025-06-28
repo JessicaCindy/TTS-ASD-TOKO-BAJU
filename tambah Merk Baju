@@ -1,0 +1,22 @@
+void tambahMerkBaru() {
+    system("cls");
+    printf("==============================================\n");
+    printf("|             Tambah Merk Baju Baru          |\n");
+    printf("==============================================\n");
+
+    if (jumlahMerk < MAX_MERK) {
+        printf("Masukkan nama merk baru: ");
+        scanf("%s", merk[jumlahMerk]); // Tambahkan merk ke indeks berikutnya
+        // Inisialisasi stok dan jumlahBeli untuk merk baru menjadi 0
+        for (int i = 0; i < jumlahJenisBaju; i++) {
+            stok[jumlahMerk][i] = 0;
+            jumlahBeli[jumlahMerk][i] = 0;
+        }
+        jumlahMerk++; // Tingkatkan jumlah merk yang ada
+        printf("Merk baru '%s' berhasil ditambahkan!\n", merk[jumlahMerk - 1]);
+    } else {
+        printf("Kapasitas merk sudah penuh. Tidak bisa menambah merk lagi.\n");
+    }
+    printf("==============================================\n");
+    system("pause");
+}
