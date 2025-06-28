@@ -1,0 +1,27 @@
+void tambahJenisBaju() {
+    system("cls");
+    printf("==============================================\n");
+    printf("|          Tambah Jenis Baju            |\n");
+    printf("==============================================\n");
+
+    if (jumlahJenisBaju < MAX_JENIS) {
+        printf("Masukkan nama jenis baju baru (contoh: Jumpsuit): ");
+        scanf("%s", jenisBaju[jumlahJenisBaju]); // Tambahkan jenis baju ke indeks berikutnya
+
+        printf("Masukkan harga standar untuk %s: Rp ", jenisBaju[jumlahJenisBaju]);
+        scanf("%d", &hargaBaju[jumlahJenisBaju]); // Set harga untuk jenis baju baru
+
+        // Inisialisasi stok untuk jenis baju baru pada semua merk yang sudah ada
+        for (int m = 0; m < jumlahMerk; m++) {
+            stok[m][jumlahJenisBaju] = 0;
+            jumlahBeli[m][jumlahJenisBaju] = 0;
+        }
+        jumlahJenisBaju++; // Tingkatkan jumlah jenis baju yang ada
+        printf("Jenis baju '%s' berhasil ditambahkan dengan harga Rp %d!\n",
+               jenisBaju[jumlahJenisBaju - 1], hargaBaju[jumlahJenisBaju - 1]);
+    } else {
+        printf("Kapasitas jenis baju sudah penuh. Tidak bisa menambah jenis baju lagi.\n");
+    }
+    printf("==============================================\n");
+    system("pause");
+}
