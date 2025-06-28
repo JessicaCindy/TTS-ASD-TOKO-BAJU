@@ -1,0 +1,56 @@
+void editHargaBaju() {
+    int pilihanMerk, pilihanBaju, hargaBaru;
+    do {
+        system("cls");
+        printf("==============================================\n");
+        printf("|             Edit Harga Baju                |\n");
+        printf("==============================================\n");
+        printf("|         Pilih Merk untuk Edit Harga        |\n");
+        printf("==============================================\n");
+        for (int i = 0; i < jumlahMerk; i++) {
+            printf("| %2d.| %-37s |\n", i + 1, merk[i]);
+        }
+        printf("|  0.| Kembali ke menu utama                 |\n");
+        printf("==============================================\n");
+        printf("Pilihan Anda: ");
+        scanf("%d", &pilihanMerk);
+
+        if (pilihanMerk >= 1 && pilihanMerk <= jumlahMerk) {
+            int indeksMerk = pilihanMerk - 1;
+            do {
+                system("cls");
+                printf("=====================================================\n");
+                printf("|         Edit Harga untuk Merk: %-15s|\n", merk[indeksMerk]);
+                printf("=====================================================\n");
+                printf("| No.| Jenis Baju             | Harga Saat Ini |\n");
+                printf("------------------------------------------------------\n");
+                for (int i = 0; i < jumlahJenisBaju; i++) {
+                    printf("| %2d.| %-20s | Rp %-10d |\n",
+                           i + 1, jenisBaju[i], hargaBaju[i]);
+                }
+                printf("=====================================================\n");
+                printf("Masukkan nomor baju (0 untuk kembali): ");
+                scanf("%d", &pilihanBaju);
+
+                if (pilihanBaju >= 1 && pilihanBaju <= jumlahJenisBaju) {
+                    printf("Masukkan harga baru untuk %s %s: Rp ", jenisBaju[pilihanBaju - 1], merk[indeksMerk]);
+                    scanf("%d", &hargaBaru);
+                    if (hargaBaru > 0) {
+                        hargaBaju[pilihanBaju - 1] = hargaBaru; // Perbarui harga
+                        printf("Harga %s %s berhasil diubah menjadi Rp %d.\n",
+                               jenisBaju[pilihanBaju - 1], merk[indeksMerk], hargaBaru);
+                    } else {
+                        printf("Harga harus lebih dari 0.\n");
+                    }
+                    system("pause");
+                } else if (pilihanBaju != 0) {
+                    printf("Pilihan tidak valid. Silakan coba lagi.\n");
+                    system("pause");
+                }
+            } while (pilihanBaju != 0);
+        } else if (pilihanMerk != 0) {
+            printf("Pilihan tidak valid. Silakan coba lagi.\n");
+            system("pause");
+        }
+    } while (pilihanMerk != 0);
+}
